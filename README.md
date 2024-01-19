@@ -3,7 +3,7 @@
 This is a sample component library that can be expanded and then used for your react projects.
 
 * Create/modify components in the folders under src/cmpntlib
-* Register any components you create in the src/cmpntlib/index.jsx file, by importing them and adding their name to the export line in that file.  Just follow the pattern for the components that are already in there.
+* Register any components you create in the src/cmpntlib/index.jsx file, by importing them and adding their name to the export line in that file.  Just follow the pattern of the sample components that are already in there.
 * build the library ``$ npm run build``
 * Go to the project that will use this library and install this library
     ``$ npm i [fullPathToLibraryProjectFolder]``

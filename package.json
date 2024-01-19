@@ -2,13 +2,15 @@
   "name": "componentlib",
   "private": true,
   "version": "0.0.0",
-  "main":"./dist/uiLib.js",
-  "files":["dist"],
+  "main": "./dist/uiLib.js",
+  "files": [
+    "dist"
+  ],
   "exports": {
-    ".":{
+    ".": {
       "import": "./dist/uiLib.js"
     },
-    "./dist/style.css" : "./dist/style.css"
+    "./dist/style.css": "./dist/style.css"
   },
   "type": "module",
   "scripts": {
@@ -26,6 +28,7 @@
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@vitejs/plugin-react": "^4.2.1",
-    "vite": "^5.0.8"
+    "vite": "^5.0.8",
+    "vite-plugin-css-injected-by-js": "^3.3.1"
   }
 }
