@@ -9,7 +9,7 @@ This is a sample component library that can be expanded and then used for your r
     ``$ npm i [fullPathToLibraryProjectFolder]``
 * In your project code, import the components you want to use from the component library.  For example
     ```javascript
-    import {GlowButton} from 'componentlib';
+    import {GlowButton} from 'component-lib';
     ```
 
 Using a UI component library like this allows you to amass a large personal library of UI components to use in your projects that you can select from, without bundling ALL of components including ones you don't need for your project.
