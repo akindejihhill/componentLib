@@ -1,9 +1,9 @@
 import React from "react";
 import './HoverText.css';
 
-const HoverText = () => {
+const HoverText = ({label}) => {
     return (
-        <h1>Hover Me</h1>
+        <h1 id="hovertextexample">{label}</h1>
     )
 
 }

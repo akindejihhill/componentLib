@@ -1,0 +1,98 @@
+.library-main-menu {
+    position : absolute;
+    top : 20px;
+    left : 120px;
+    width : 160px;
+    background: yellow;
+    font-size: 14px;
+    padding : 5px;
+    margin : auto 0;
+    text-align: center;
+    z-index: 100; 
+    /* border: thick double #32a1ce; */
+    border-radius: 0px 30% 30%;
+}
+
+.library-submenu-left, .library-submenu-right{
+    position :absolute;
+    right : 50px;
+    top : 0px;
+    width : 100px;
+    background: yellow;
+    font-size: 14px;
+    padding : 5px;
+    margin : 0;
+    text-align: center;
+    z-index: 100; 
+    /* border: thick double #32a1ce; */
+    border-radius: 10px;
+}
+
+.library-submenu-left{
+    left : -100px;
+}
+
+.library-submenu-right{
+    left : 120px;
+}
+
+.library-menulink-group{
+    display : block;
+    position : relative;
+    font-weight: bold;
+    width : 100%;
+}
+
+/* .library-menufronticon:before{
+    content : "<"
+} */
+
+.library-menufronticon{
+    display : inline-block;
+    position: relative;
+    left : 0px;
+    max-width: 15%;
+}
+
+.library-menulink{
+    display : inline-block;
+    min-width: 90%;
+}
+
+.library-menurearicon{
+    display : inline-block;
+    position: relative;
+    right : 0px;
+    max-width: 15%;
+}
+
+.library-menurearicon:after{
+    content : ">"
+}
+
+
+
+
+.library-main-menu p{
+    margin : 3px auto;
+}
+
+
+.library-noshow {
+    display: none;
+}
+
+.library-show {
+    display: block;
+}
+
+.library-menu-icon{
+    height: 75px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.library-menu-icon:hover{
+    box-shadow: -12px 0px 5px 10px #0ff;
+}
+

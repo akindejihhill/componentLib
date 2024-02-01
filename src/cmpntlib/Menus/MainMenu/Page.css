@@ -40,3 +40,31 @@
 .read-the-docs {
   color: #888;
 }
+
+#id {
+  display : block;
+}
+
+/*////////////////////////////////////////////*/
+#main-menu{
+  display  : block;
+  margin: 0 auto;
+  width : 165px;
+  position : relative;
+  /* top : 50%; */
+  /* transform: translateY(-305px); */
+  color : white;
+  background-color: blue;
+  border-radius: 50% 50% 0% 0%;
+
+}
+
+.mmoption{
+  position : relative;
+  display : inline-block;
+  padding : 5px;
+  width : 150px;
+  text-align : center;
+  margin : 20px 0;
+  left : 0;
+}
