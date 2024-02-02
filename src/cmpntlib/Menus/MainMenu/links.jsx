@@ -47,61 +47,61 @@
 const callback = {func : ()=>{throw Error ("A callback method was specified but not provided to a menu set")}}
 
 const menuLinks = {
-                    func : callback.func,
-                    data : [{
-                                role:'menu',
-                                title:'Test Menu 01',
-                                input: {
-                                            func: callback.func,
-                                            data : [{
-                                                role:'menu',
-                                                title: 'Test Menu 01a',
-                                                input:  {
-                                                            func : callback.func,
-                                                            data : [{
-                                                                        role : 'function',
-                                                                        title: "alert",
-                                                                        input: ()=>{alert("Boo!")}
-                                                                    },
-                                                                    {
-                                                                        role : 'function',
-                                                                        title: "alert",
-                                                                        input: ()=>{alert("BANG!")}
-                                                            }]
-                                                }
+    func : callback.func,
+    data : [{
+              role:'menu',
+              title:'Test Menu 01',
+              input: {
+                        func: callback.func,
+                        data : [{
+                            role:'menu',
+                            title: 'Test Menu 01a',
+                            input:  {
+                                      func : callback.func,
+                                      data : [{
+                                                  role : 'function',
+                                                  title: "alerta",
+                                                  input: ()=>{alert("Boo!")}
+                                              },
+                                              {
+                                                  role : 'function',
+                                                  title: "alertb",
+                                                  input: ()=>{alert("BANG!")}
+                                      }]
+                            }
+                        },
+                        {
+                            role:'menu',
+                            title: 'Test Menu 01b',
+                            input: {
+                                    func : callback.func,
+                                    data : [{
+                                                role : 'function',
+                                                title: "alertc",
+                                                input: ()=>{alert("Zinger!")}
                                             },
                                             {
-                                                role:'menu',
-                                                title: 'Test Menu 01b',
-                                                input: {
-                                                        func : callback.func,
-                                                        data : [{
-                                                                    role : 'function',
-                                                                    title: "alert",
-                                                                    input: ()=>{alert("Zinger!")}
-                                                                },
-                                                                {
-                                                                    role : 'function',
-                                                                    title: "alert",
-                                                                    input: ()=>{alert("TZZZ ZZZ!")}
-                                                        }]
-                                                }
-                                            }]
-                                        }                                
-                                        
-                            },
-                            {
-                                role : 'function',
-                                title: "alert",
-                                input: ()=>{alert("SHAZAM!")}
-                            },
-                            {
-                                role : 'function',
-                                title: "alert",
-                                input: ()=>{alert("WAZA!")}
+                                                role : 'function',
+                                                title: "alertd",
+                                                input: ()=>{alert("TZZZ ZZZ!")}
+                                    }]
                             }
+                        }]
+                    }                                
+                      
+            },
+            {
+                role : 'function',
+                title: "alert",
+                input: ()=>{alert("SHAZAM!")}
+            },
+            {
+                role : 'function',
+                title: "alert",
+                input: ()=>{alert("WAZA!")}
+            }
 
-                    ]
+    ]
 }
 
 

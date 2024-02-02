@@ -9,59 +9,106 @@ import { useState, useEffect, useRef } from 'react';
  * It requires the main menu component to start, and this recursive menu component 
  * to create the submenues.
  * 
- * @param links, a list of objects describing a link.  Each link object has three mandatory keys, 
- * *role*, *title*, and *input*.
+ * @param links, a list of objects describing a link.  Each link object has two main properties:
+ * 1) func, which is a place to store a callback function that handles displaying any components 
+ * listed in the menu. 
+ * 2) data, has three madatory keys, *role*, *title*, and *input*, and two optional keys
+ *    *props* and *destription* only nessesary if the menu item is a prop.
  * 
- * *role*, is either 'menuitem', 'menu', or 'function'.  A menuitem will expect a path to be provided as input.  A 
- *  menu will expect a nested links list to be provided as input to create submenus.  A function item will expect 
- *  a function to be provided as input that will be attached to the submenu's onClick event handler. This allows 
- *  for things like a 'logout' and 'save' buttons or buttons to play sounds or do other things that you can imagine.
+ * *role*, is either 'menuitem', 'menu', 'function', or 'callback'.  
+ *   * A menuitem will expect a path to be provided as input.  
+ *   * A menu will expect a nested links list object to be provided (complete with its own func and data properties) as input to 
+ *   *  create submenus.  
+ *   * A function item will expect a function to be provided as input that will be attached to the submenu's onClick event handler. 
+ *   *  This allows for things like a 'logout' and 'save' buttons or buttons to play sounds or do other things that you can imagine.
+ *   * A callback item sends a component back to the original component that hosts the menu.  It requires two additional properties
+ *   * to be included,  'props' and 'description'
  * 
  * *title* is the text that will be displayed for the menu item.
  *  
- * *input* is either a path to a document or a nested submenu
+ * *input* is one of three things depending on the role type.
+ *   1) a path to a document 
+ *   2) a nested submenu
+ *   3) a component.  The component needs to be previousely imported from a component module
+ * 
+ * *props* is required for callback menuitems.  It allows you to pass any props that are expected by the component.  Assign an 
+ *  object to this property with prop names and prop values 
+ * 
+ * *description* sends information to be displayed along with the component within the Showcase component It can
+ *  be a text description of the component being displayed, or maybe even an object or html.  This
+ *  is javascript after all so send whatever type of data through that you want to display.
  * 
  * The example shows a menu with a nested submenu called "Offices".  "New York" and 'Los Angeles'.  It 
  * also has two top level menuitems called "Products" and "Services".
  * 
  * Example: 
- * [{
- *   role : 'menu', 
- *   title: 'Offices', 
- *   input : [{
- *            role : 'menuitem', 
- *            title : 'New York', 
- *            input : '/newyorkoffice'
- *           }, 
- *           {
- *            role : 'menuitem, 
- *            title : 'Los Angeles', 
- *            input : '/laoffice}]
- *           }]
- *   },
- *   {
- *    role : 'menuitem',
- *    title: 'Products',
- *    input: '/productspage'
- *   },
- *   {
- *    role : 'menuitem',
- *    title: 'Services',
- *    input: '/servicespage'
- *   }
- *   {
- *    role : 'function',
- *    title: 'sign out',
- *    input: logout
- *   }
- *  ]
+ * 
+ *  const callback = {func : ()=>{throw Error ("A callback method was specified but not provided to a menu set")}}
+
+    const menuLinks = {
+        func:   callback.func
+        data:   [
+            {
+                role :  'menu', 
+                title:  'Offices', 
+                input : { func :    callback.func,
+                          data :[   
+                                    {
+                                        role : 'menuitem', 
+                                        title : 'New York', 
+                                        input : '/newyorkoffice'
+                                    }, 
+                                    {
+                                        role : 'menuitem, 
+                                        title : 'Los Angeles', 
+                                        input : '/laoffice}]
+                                    }
+                                    {
+                                        role  : 'callback',
+                                        title : 'National Map',
+                                        input : MapComponent,
+                                        props : {   logo : logoObject,
+                                                    location : ["37.4419 n", "122.1430 w"]                                                
+                                        },
+                                        description: "A special time limited impuse offer just for you!"
+
+                                    },
+                                ]
+            },
+            {
+                role : 'menuitem',
+                title: 'Products',
+                input: '/productspage'
+            },
+            {
+                role : 'menuitem',
+                title: 'Services',
+                input: '/servicespage'
+            }
+            {
+                role  : 'callback',
+                title : 'Special Offer',
+                input : SpecialOffer,
+                props : {   logo : logoObject,
+                            name : "Mark Suckerberg"
+                        
+                },
+                description: "A special time limited impuse offer just for you!"
+
+            },
+            {
+                role : 'function',
+                title: 'sign out',
+                input: logout
+            }
+        ]
  *  
  *  For a large menu it is suggested 
  * to keep this data in a separate file that is imported and passed to the "links" prop.
  * 
  * @returns 
  */
-const Menu = ({callback, links, handleBlur, y, menuOffset}) => {
+const Menu = ({links, callback, handleBlur, parentKey, y, menuOffset}) => {
 
 
     /* The callback function returns a component from the 'links' object back 
@@ -73,6 +120,7 @@ const Menu = ({callback, links, handleBlur, y, menuOffset}) => {
     links.func = callback;     /*passes the callback function to the links object
     that defines the contents of the menu.*/
 
+    const menuRef = useRef(null);
     const pageHasRendered = useRef(false);
     const cssBorder = 5;
 
@@ -91,8 +139,10 @@ const Menu = ({callback, links, handleBlur, y, menuOffset}) => {
 
     //toggles the visibility of the menu
     function openSubmenu (data, index, event){
-        setSubmenu(<Menu links={data.input} key={index+1000} y={event.pageY} menuOffset={y}/>);
+        setSubmenu(<Menu links={data.input} key={index+parentKey+1000} parentKey={index+parentKey+1000} y={event.pageY} menuOffset={y}/>);
         setVisibility(true); //triggers useEffect to rerender the page
+        console.log("Opening submenu: ", index+parentKey+1000);
+
         
     }
 
@@ -100,13 +150,21 @@ const Menu = ({callback, links, handleBlur, y, menuOffset}) => {
     // const handleBlur = (event) => {
     //     if (menuRef.current && !menuRef.current.contains(event.target)) {
     //         setVisibility(false);
+    //         closeMenu(event);
     //     }
     //   };
 
-    // useEffect(() => {
-    //     document.addEventListener('click', handleBlur);
-    //     return () => {document.removeEventListener('click', handleBlur)};
-    // }, []);
+    // const handleBlur = (event) => {
+    //     if (menuRef.current && !menuRef.current.contains(event.target)) {
+
+    //         setVisibility(false);
+    //     }
+
+    //     if(event.target.parentElement.className === "menuitem"){
+    //         setVisibility(false);
+    //         setMenu(null);
+    //     }
+    // };
 
 
     //listen for clicks
@@ -120,6 +178,7 @@ const Menu = ({callback, links, handleBlur, y, menuOffset}) => {
     //Note: once the menu is clicked on it steals the menuRef from the user button, so that the "handleOnBlur" function works with the menu instead.
     useEffect(()=>{
         //if(pageHasRendered.current){
+            console.log("setting menu");
             setMenu(
                 <div role="menu" className="submenu-left" style={{top : `${y - menuOffset - cssBorder}px`}}>
                 {/* <div role="menu" className="submenu-left" > */}
@@ -147,7 +206,7 @@ const Menu = ({callback, links, handleBlur, y, menuOffset}) => {
         //}
         //pageHasRendered.current = true;
 
-    },[visibility]);
+    },[visibility, submenu]);
 
 
     return (<>

@@ -10,59 +10,115 @@ import Menu from './Menu.jsx';
  * It requires this main menu component to start, and a recursive menu component 
  * to create the submenues.
  * 
- * @param links, a list of objects describing a link.  Each link object has three mandatory keys, 
- * *role*, *title*, and *input*.
+ * @param links, a list of objects describing a link.  Each link object has two main properties:
+ * 1) func, which is a place to store a callback function that handles displaying any components 
+ * listed in the menu. 
+ * 2) data, has three madatory keys, *role*, *title*, and *input*, and two optional keys
+ *    *props* and *destription* only nessesary if the menu item is a prop.
  * 
- * *role*, is either 'menuitem', 'menu', or 'function'.  A menuitem will expect a path to be provided as input.  A 
- *  menu will expect a nested links list to be provided as input to create submenus.  A function item will expect 
- *  a function to be provided as input that will be attached to the submenu's onClick event handler. This allows 
- *  for things like a 'logout' and 'save' buttons or buttons to play sounds or do other things that you can imagine.
+ * *role*, is either 'menuitem', 'menu', 'function', or 'callback'.  
+ *   * A menuitem will expect a path to be provided as input.  
+ *   * A menu will expect a nested links list object to be provided (complete with its own func and data properties) as input to 
+ *   *  create submenus.  
+ *   * A function item will expect a function to be provided as input that will be attached to the submenu's onClick event handler. 
+ *   *  This allows for things like a 'logout' and 'save' buttons or buttons to play sounds or do other things that you can imagine.
+ *   * A callback item sends a component back to the original component that hosts the menu.  It requires two additional properties
+ *   * to be included,  'props' and 'description'
  * 
  * *title* is the text that will be displayed for the menu item.
  *  
- * *input* is either a path to a document or a nested submenu
+ * *input* is one of three things depending on the role type.
+ *   1) a path to a document 
+ *   2) a nested submenu
+ *   3) a component.  The component needs to be previousely imported from a component module
+ * 
+ * *props* is required for callback menuitems.  It allows you to pass any props that are expected by the component.  Assign an 
+ *  object to this property with prop names and prop values 
+ * 
+ * *description* sends information to be displayed along with the component within the Showcase component It can
+ *  be a text description of the component being displayed, or maybe even an object or html.  This
+ *  is javascript after all so send whatever type of data through that you want to display.
  * 
  * The example shows a menu with a nested submenu called "Offices".  "New York" and 'Los Angeles'.  It 
  * also has two top level menuitems called "Products" and "Services".
  * 
  * Example: 
- * [{
- *   role : 'menu', 
- *   title: 'Offices', 
- *   input : [{
- *            role : 'menuitem', 
- *            title : 'New York', 
- *            input : '/newyorkoffice'
- *           }, 
- *           {
- *            role : 'menuitem, 
- *            title : 'Los Angeles', 
- *            input : '/laoffice}]
- *           }]
- *   },
- *   {
- *    role : 'menuitem',
- *    title: 'Products',
- *    input: '/productspage'
- *   },
- *   {
- *    role : 'menuitem',
- *    title: 'Services',
- *    input: '/servicespage'
- *   }
- *   {
- *    role : 'function',
- *    title: 'sign out',
- *    input: logout
- *    }
- *  ]
+ * 
+ *  const callback = {func : ()=>{throw Error ("A callback method was specified but not provided to a menu set")}}
+
+    const menuLinks = {
+        func:   callback.func
+        data:   [
+            {
+                role :  'menu', 
+                title:  'Offices', 
+                input : { func :    callback.func,
+                          data :[   
+                                    {
+                                        role : 'menuitem', 
+                                        title : 'New York', 
+                                        input : '/newyorkoffice'
+                                    }, 
+                                    {
+                                        role : 'menuitem, 
+                                        title : 'Los Angeles', 
+                                        input : '/laoffice}]
+                                    }
+                                    {
+                                        role  : 'callback',
+                                        title : 'National Map',
+                                        input : MapComponent,
+                                        props : {   logo : logoObject,
+                                                    location : ["37.4419 n", "122.1430 w"]                                                
+                                        },
+                                        description: "A special time limited impuse offer just for you!"
+
+                                    },
+                                ]
+            },
+            {
+                role : 'menuitem',
+                title: 'Products',
+                input: '/productspage'
+            },
+            {
+                role : 'menuitem',
+                title: 'Services',
+                input: '/servicespage'
+            }
+            {
+                role  : 'callback',
+                title : 'Special Offer',
+                input : SpecialOffer,
+                props : {   logo : logoObject,
+                            name : "Mark Suckerberg"
+                        
+                },
+                description: "A special time limited impuse offer just for you!"
+
+            },
+            {
+                role : 'function',
+                title: 'sign out',
+                input: logout
+            }
+        ]
+ *  
  *  For a large menu it is suggested 
  * to keep this data in a separate file that is imported and passed to the "links" prop.
- * 
+ *
  * @param icon, the picture to use for the menu button
+ * @param callack a callback runction required to send a component from the 'links' object 
+ *   file to the original component that hosts this menu.  The callback function that needs 
+ *   to be defined in the original file is sampled below.
+ * 
+ *  const callback = (label="", description="", Input=null, props=null) => {
+ *    setShowcaseArea(<Showcase label={label} description={description}><Input {...props}/></Showcase>);
+ *  } 
+ * 
  * @returns 
  */
-const MainMenu = ({callback, links, icon}) => {
+const MainMenu = ({links, icon, callback}) => {
 
     /* The callback function returns a component from the 'links' object back 
      * to the original component that hosts the menu component.  This allows 
@@ -114,8 +170,9 @@ const MainMenu = ({callback, links, icon}) => {
     }
 
     function toggleSubmenu(data, index, event){
-        setSubmenu(<Menu callback={callback} links={data.input} key={index+1000} handleBlur={handleBlur} y={event.pageY} menuOffset={menuOffset}/>);
+        setSubmenu(<Menu callback={callback} links={data.input} key={index+1000} parentKey={index+1000} handleBlur={handleBlur} y={event.pageY} menuOffset={menuOffset}/>);
         setSMVisibility(visibility=>!visibility); //triggers useEffect to rerender the page        
+        console.log("Opening submenu: ", index+1000);
     }
 
 
