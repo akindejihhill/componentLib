@@ -1,3 +1,14 @@
+/**  A Recursive menu system by Akindeji Hill (https://github.com/akindejihhill/)
+ *   Allows for a menu that can call components, functions, and route locations.
+ *   The menu is defined in an object which can be in a separate module.  Menus and
+ *   nested submenus can be defined in that location.  
+ * 
+ *   Feel free to use and modigy this in your projects, open source, free, commercial 
+ *   or otherwise, as long as this attribution remains intact in the source files.  If 
+ *   you make any improvements or changes, feel free to add you own name as a contributor
+ *   under this attribution.
+ */
+
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 import './Menu.css';   //tempoorary, TODO: make a css file for this component
@@ -140,32 +151,8 @@ const Menu = ({links, callback, handleBlur, parentKey, y, menuOffset}) => {
     //toggles the visibility of the menu
     function openSubmenu (data, index, event){
         setSubmenu(<Menu links={data.input} key={index+parentKey+1000} parentKey={index+parentKey+1000} y={event.pageY} menuOffset={y}/>);
-        setVisibility(true); //triggers useEffect to rerender the page
-        console.log("Opening submenu: ", index+parentKey+1000);
-
-        
+        setVisibility(true); //triggers useEffect to rerender the page     
     }
-
-
-    // const handleBlur = (event) => {
-    //     if (menuRef.current && !menuRef.current.contains(event.target)) {
-    //         setVisibility(false);
-    //         closeMenu(event);
-    //     }
-    //   };
-
-    // const handleBlur = (event) => {
-    //     if (menuRef.current && !menuRef.current.contains(event.target)) {
-
-    //         setVisibility(false);
-    //     }
-
-    //     if(event.target.parentElement.className === "menuitem"){
-    //         setVisibility(false);
-    //         setMenu(null);
-    //     }
-    // };
-
 
     //listen for clicks
     useEffect(() => {
@@ -175,20 +162,16 @@ const Menu = ({links, callback, handleBlur, parentKey, y, menuOffset}) => {
 
   
     //render the user menu after the visibility has been toggled
-    //Note: once the menu is clicked on it steals the menuRef from the user button, so that the "handleOnBlur" function works with the menu instead.
     useEffect(()=>{
-        //if(pageHasRendered.current){
-            console.log("setting menu");
             setMenu(
                 <div role="menu" className="submenu-left" style={{top : `${y - menuOffset - cssBorder}px`}}>
-                {/* <div role="menu" className="submenu-left" > */}
                     {
                         links.data.map((data, index) => {
                             if (data.role === 'menuitem'){
                                 return (<p key={index} role="menuitem" className="menuitem"><Link to={data.input} onClick={closeMenu}>{data.title}</Link></p>)
                             }  else if (data.role === 'menu'){
-                                return (<div className="menulink-group">
-                                    <span className="menufronticon"></span><span className="menulink" key={index} role="menu" onClick={(event)=>{openSubmenu(data, index, event)}}><a>{data.title}</a></span><span className="menurearicon"></span>
+                                return (<div className="menulink-group" key={index}>
+                                    <span className="menufronticon"></span><span className="menulink" role="menu" onClick={(event)=>{openSubmenu(data, index, event)}}><a>{data.title}</a></span><span className="menurearicon"></span>
                                 </div>)
                             } else if (data.role === 'function'){
                                 return (<p key={index} role="menuitem" className="menuitem"><a onClick={(evt)=>{closeMenu(evt) ; data.input();}}>{data.title}</a></p>)
@@ -203,8 +186,6 @@ const Menu = ({links, callback, handleBlur, parentKey, y, menuOffset}) => {
                     {submenu} 
                 </div> 
             );
-        //}
-        //pageHasRendered.current = true;
 
     },[visibility, submenu]);
 

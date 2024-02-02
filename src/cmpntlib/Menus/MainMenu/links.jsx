@@ -44,6 +44,10 @@
  *   }
  *  ]
  * */
+
+import GlowButton from '../../Buttons/GlowButton/GlowButton.jsx';
+import RoundedButton from '../../Buttons/RoundedButton/RoundedButton.jsx';
+
 const callback = {func : ()=>{throw Error ("A callback method was specified but not provided to a menu set")}}
 
 const menuLinks = {
@@ -86,19 +90,34 @@ const menuLinks = {
                                                 input: ()=>{alert("TZZZ ZZZ!")}
                                     }]
                             }
-                        }]
+                        },
+                        {
+                          role : 'callback',
+                          title: 'Component B',
+                          input: RoundedButton,
+                          props: {label : "Button Component!"},
+                          description: "The menu can contain components to be displayed by this 'Showcase' component"
+                        }
+                      ]
                     }                                
                       
             },
             {
-                role : 'function',
-                title: "alert",
-                input: ()=>{alert("SHAZAM!")}
+                role :  'function',
+                title:  "alert",
+                input:  ()=>{alert("SHAZAM!")}
             },
             {
-                role : 'function',
-                title: "alert",
-                input: ()=>{alert("WAZA!")}
+                role :  'function',
+                title:  "alert",
+                input:  ()=>{alert("WAZA!")}
+            },
+            {
+                role : 'callback',
+                title: 'Component A',
+                input: GlowButton,
+                props: {label : "Button Component!"},
+                description: "The menu can contain components to be displayed by this 'Showcase' component"
             }
 
     ]

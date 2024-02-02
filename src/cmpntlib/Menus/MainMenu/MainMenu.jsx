@@ -1,3 +1,14 @@
+/**  A Recursive menu system by Akindeji Hill (https://github.com/akindejihhill/)
+ *   Allows for a menu that can call components, functions, and route locations.
+ *   The menu is defined in an object which can be in a separate module.  Menus and
+ *   nested submenus can be defined in that location.  
+ * 
+ *   Feel free to use and modigy this in your projects, open source, free, commercial 
+ *   or otherwise, as long as this attribution remains intact in the source files.  If 
+ *   you make any improvements or changes, feel free to add you own name as a contributor
+ *   under this attribution.
+ */
+
 import PropTypes from 'prop-types';
 import {Link, useNavigate} from 'react-router-dom';
 import './Menu.css';
@@ -172,7 +183,6 @@ const MainMenu = ({links, icon, callback}) => {
     function toggleSubmenu(data, index, event){
         setSubmenu(<Menu callback={callback} links={data.input} key={index+1000} parentKey={index+1000} handleBlur={handleBlur} y={event.pageY} menuOffset={menuOffset}/>);
         setSMVisibility(visibility=>!visibility); //triggers useEffect to rerender the page        
-        console.log("Opening submenu: ", index+1000);
     }
 
 
@@ -195,8 +205,8 @@ const MainMenu = ({links, icon, callback}) => {
                                 if (data.role === 'menuitem'){
                                     return (<p key={index} role="menuitem" className="menuitem"><Link to={data.input} onClick={(evt)=>{setUMVisibility(false); setSMVisibility(false)}}>{data.title}</Link></p>)
                                 } else if (data.role === 'menu'){
-                                    return (<div className="menulink-group">
-                                                <span className="menufronticon"></span><span className="menulink" key={index} role="menu"  onClick={(event)=>{toggleSubmenu(data, index, event)}}><a>{data.title}</a></span><span className="menurearicon"></span>
+                                    return (<div className="menulink-group" key={index}>
+                                                <span className="menufronticon"></span><span className="menulink" role="menu"  onClick={(event)=>{toggleSubmenu(data, index, event)}}><a>{data.title}</a></span><span className="menurearicon"></span>
                                             </div>
                                         )
                                 } else if (data.role === 'function'){
