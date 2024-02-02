@@ -117,7 +117,7 @@ import { useState, useEffect, useRef } from 'react';
  *  For a large menu it is suggested 
  * to keep this data in a separate file that is imported and passed to the "links" prop.
  * 
- * @returns 
+ * @returns
  */
 const Menu = ({links, callback, handleBlur, parentKey, y, menuOffset}) => {
 
